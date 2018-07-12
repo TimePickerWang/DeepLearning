@@ -1,8 +1,8 @@
-import os
-import numpy as np
-import tensorflow as tf
 import h5py
 import math
+import numpy as np
+import tensorflow as tf
+
 
 def load_dataset():
     train_dataset = h5py.File('./Data/train_signs_1.h5', "r")
