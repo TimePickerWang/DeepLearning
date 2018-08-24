@@ -259,3 +259,108 @@ def rnn_backward(da, caches):
 
     return gradients
 
+
+#  LSTM cell backward
+def lstm_cell_backward(da_next, dc_next, cache):
+    """
+    Arguments:
+    da_next -- Gradients of next hidden state, of shape (n_a, m)
+    dc_next -- Gradients of next cell state, of shape (n_a, m)
+    cache -- cache storing information from the forward pass
+    Returns:
+    gradients -- python dictionary containing:
+                 dxt -- Gradient of input data at time-step t, of shape (n_x, m)
+                 da_prev -- Gradient w.r.t. the previous hidden state, numpy array of shape (n_a, m)
+                 dc_prev -- Gradient w.r.t. the previous memory state, of shape (n_a, m, T_x)
+                 dWf -- Gradient w.r.t. the weight matrix of the forget gate, numpy array of shape (n_a, n_a + n_x)
+                 dWi -- Gradient w.r.t. the weight matrix of the input gate, numpy array of shape (n_a, n_a + n_x)
+                 dWc -- Gradient w.r.t. the weight matrix of the memory gate, numpy array of shape (n_a, n_a + n_x)
+                 dWo -- Gradient w.r.t. the weight matrix of the save gate, numpy array of shape (n_a, n_a + n_x)
+                 dbf -- Gradient w.r.t. biases of the forget gate, of shape (n_a, 1)
+                 dbi -- Gradient w.r.t. biases of the update gate, of shape (n_a, 1)
+                 dbc -- Gradient w.r.t. biases of the memory gate, of shape (n_a, 1)
+                 dbo -- Gradient w.r.t. biases of the save gate, of shape (n_a, 1)
+    """
+    (a_next, c_next, a_prev, c_prev, ft, it, cct, ot, xt, parameters) = cache
+    n_x, m = xt.shape
+    n_a, m = a_next.shape
+
+    dot = da_next * np.tanh(c_next) * ot * (1 - ot)
+    dcct = (dc_next * it + ot * (1 - np.tanh(c_next) ** 2) * it * da_next) * (1 - cct ** 2)
+    dit = (dc_next * cct + ot * (1 - np.tanh(c_next) ** 2) * cct * da_next) * it * (1 - it)
+    dft = (dc_next * c_prev + ot * (1 - np.tanh(c_next) ** 2) * c_prev * da_next) * ft * (1 - ft)
+
+    dWf = np.dot(dft, np.concatenate((a_prev, xt), axis=0).T)
+    dWi = np.dot(dit, np.concatenate((a_prev, xt), axis=0).T)
+    dWc = np.dot(dcct, np.concatenate((a_prev, xt), axis=0).T)
+    dWo = np.dot(dot, np.concatenate((a_prev, xt), axis=0).T)
+    dbf = np.sum(dft, axis=1, keepdims=True)
+    dbi = np.sum(dit, axis=1, keepdims=True)
+    dbc = np.sum(dcct, axis=1, keepdims=True)
+    dbo = np.sum(dot, axis=1, keepdims=True)
+
+    da_prev = np.dot(parameters['Wf'][:, :n_a].T, dft) + np.dot(parameters['Wi'][:, :n_a].T, dit)\
+              + np.dot(parameters['Wc'][:, :n_a].T, dcct) + np.dot(parameters['Wo'][:, :n_a].T, dot)
+    dc_prev = dc_next * ft + ot * (1 - np.tanh(c_next) ** 2) * ft * da_next
+    dxt = np.dot(parameters['Wf'][:, n_a:].T, dft) + np.dot(parameters['Wi'][:, n_a:].T, dit)\
+          + np.dot(parameters['Wc'][:, n_a:].T, dcct) + np.dot(parameters['Wo'][:, n_a:].T, dot)
+
+    gradients = {"dxt": dxt, "da_prev": da_prev, "dc_prev": dc_prev, "dWf": dWf, "dbf": dbf, "dWi": dWi, "dbi": dbi,
+                 "dWc": dWc, "dbc": dbc, "dWo": dWo, "dbo": dbo}
+    return gradients
+
+
+# LSTM backward
+def lstm_backward(da, caches):
+    """
+    Arguments:
+    da -- Gradients w.r.t the hidden states, numpy-array of shape (n_a, m, T_x)
+    dc -- Gradients w.r.t the memory states, numpy-array of shape (n_a, m, T_x)
+    caches -- cache storing information from the forward pass (lstm_forward)
+    Returns:
+    gradients -- python dictionary containing:
+                 dx -- Gradient of inputs, of shape (n_x, m, T_x)
+                 da0 -- Gradient w.r.t. the previous hidden state, numpy array of shape (n_a, m)
+                 dWf -- Gradient w.r.t. the weight matrix of the forget gate, numpy array of shape (n_a, n_a + n_x)
+                 dWi -- Gradient w.r.t. the weight matrix of the update gate, numpy array of shape (n_a, n_a + n_x)
+                 dWc -- Gradient w.r.t. the weight matrix of the memory gate, numpy array of shape (n_a, n_a + n_x)
+                 dWo -- Gradient w.r.t. the weight matrix of the save gate, numpy array of shape (n_a, n_a + n_x)
+                 dbf -- Gradient w.r.t. biases of the forget gate, of shape (n_a, 1)
+                 dbi -- Gradient w.r.t. biases of the update gate, of shape (n_a, 1)
+                 dbc -- Gradient w.r.t. biases of the memory gate, of shape (n_a, 1)
+                 dbo -- Gradient w.r.t. biases of the save gate, of shape (n_a, 1)
+        """
+    (caches, x) = caches
+    (a1, c1, a0, c0, f1, i1, cc1, o1, x1, parameters) = caches[0]
+    n_a, m, T_x = da.shape
+    n_x, m = x1.shape
+
+    dx = np.zeros((n_x, m, T_x))
+    da0 = np.zeros((n_a, m))
+    da_prevt = np.zeros((n_a, m))
+    dc_prevt = np.zeros((n_a, m))
+    dWf = np.zeros((n_a, n_a + n_x))
+    dWi = np.zeros((n_a, n_a + n_x))
+    dWc = np.zeros((n_a, n_a + n_x))
+    dWo = np.zeros((n_a, n_a + n_x))
+    dbf = np.zeros((n_a, 1))
+    dbi = np.zeros((n_a, 1))
+    dbc = np.zeros((n_a, 1))
+    dbo = np.zeros((n_a, 1))
+
+    for t in reversed(range(T_x)):
+        gradients = lstm_cell_backward(da[:, :, t] + da_prevt, dc_prevt, caches[t])
+        dx[:, :, t] = gradients['dxt']
+        dWf = dWf + gradients['dWf']
+        dWi = dWi + gradients['dWi']
+        dWc = dWc + gradients['dWc']
+        dWo = dWo + gradients['dWo']
+        dbf = dbf + gradients['dbf']
+        dbi = dbi + gradients['dbi']
+        dbc = dbc + gradients['dbc']
+        dbo = dbo + gradients['dbo']
+    da0 = gradients['da_prev']
+    gradients = {"dx": dx, "da0": da0, "dWf": dWf, "dbf": dbf, "dWi": dWi, "dbi": dbi,
+                 "dWc": dWc, "dbc": dbc, "dWo": dWo, "dbo": dbo}
+
+    return gradients
