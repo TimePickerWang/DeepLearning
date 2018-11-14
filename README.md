@@ -1,6 +1,6 @@
 以下是部分实验结果图片
 
-## 1. 不同测试数据下逻辑回归和4层hidden layer神经网络的分类结果
+## 1. 某数据集下逻辑回归和具有4层hidden layer神经网络的分类结果
 
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseOne-Neural%20Networks%20and%20Deep%20Learning/pic/ass3_1.png?raw=true)
 #### LR
