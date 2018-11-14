@@ -54,7 +54,7 @@
 ##### 分类结果
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass2_1_adamResult.png?raw=true)
 
-#### 3.3 Momuntum
+#### 3.3 Momentum
 ##### costLine
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass2_1_momentumCostLine.png?raw=true)
 ##### 分类结果
