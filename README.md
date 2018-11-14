@@ -23,16 +23,16 @@ costLine
 分类结果
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass1_2_noRegResult.png?raw=true)
 
-#### 2.2 dropout正则化
+#### 2.2 dropout正则化  
 costLine
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass1_2_dropoutCostLine.png?raw=true)
 分类结果
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass1_2_dropoutResult.png?raw=true)
 
-#### 2.3 L2正则化
-costLine
+#### 2.3 L2正则化  
+costLine  
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass1_2_L2RegCostLine.png?raw=true)
-分类结果
+分类结果  
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass1_2_L2RegResult.png?raw=true)
 
 
