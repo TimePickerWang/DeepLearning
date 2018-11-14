@@ -7,7 +7,7 @@
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseOne-Neural%20Networks%20and%20Deep%20Learning/pic/ass3_2.png?raw=true)
 #### NN
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseOne-Neural%20Networks%20and%20Deep%20Learning/pic/ass3_3.png?raw=true)
-####NN COST LINE
+#### NN COST LINE
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseOne-Neural%20Networks%20and%20Deep%20Learning/pic/ass2_1.png?raw=true)
 
 
