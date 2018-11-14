@@ -11,7 +11,7 @@
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseOne-Neural%20Networks%20and%20Deep%20Learning/pic/ass2_1.png?raw=true)
 
 
-## 2. 某数据集下不同正则化方式下的costLine和分类结果
+## 2. 某数据集下通过不同正则化方式得到的costLine和分类结果
 
 #### 数据集
 
@@ -36,7 +36,7 @@ costLine
 ![image](https://github.com/TimePickerWang/DeepLearning/blob/master/CourseTwo-Improving%20Deep%20Neural%20Networks/pic/ass1_2_L2RegResult?raw=true)
 
 
-## 3. 某数据集下不同优化方式下的costLine和分类结果
+## 3. 某数据下通过不同优化方式得到的costLine和分类结果
 
 #### 数据集
 
